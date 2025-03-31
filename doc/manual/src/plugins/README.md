@@ -92,6 +92,14 @@ Sets Gitea CI status
 
 - `gitea_authorization.<repo-owner>`
 
+## Gitea pulls
+
+Create jobs based on open Gitea pull requests
+
+### Configuration options
+
+- `gitea_authorization.<repo-owner>`
+
 ## GitHub pulls
 
 Create jobs based on open GitHub pull requests
