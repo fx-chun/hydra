@@ -92,6 +92,23 @@ Sets Gitea CI status
 
 - `gitea_authorization.<repo-owner>`
 
+## Gitea pulls
+
+Create jobs based on open Gitea pull requests
+
+### Configuration options
+
+- `gitea_authorization.<repo-owner>`
+
+## Gitea refs
+
+Hydra plugin for retrieving the list of references (branches or tags) from
+Gitea following a certain naming scheme.
+
+### Configuration options
+
+- `gitea_authorization.<repo-owner>`
+
 ## GitHub pulls
 
 Create jobs based on open GitHub pull requests

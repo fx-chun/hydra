@@ -158,6 +158,12 @@ in
             git -C /tmp/repo commit --allow-empty -m 'Additional change'
             git -C /tmp/repo push origin pr
             git -C /tmp/repo log >&2
+
+            # Create release branch
+            git -C /tmp/repo checkout -b release/release-1.0
+            git -C /tmp/repo commit --allow-empty -m 'Additional change'
+            git -C /tmp/repo push origin release/release-1.0
+            git -C /tmp/repo log >&2
           '';
 
           scripts.hydra-setup = pkgs.writeShellScript "hydra.sh" ''
@@ -212,6 +218,11 @@ in
                   "type": "giteapulls",
                   "value": "localhost:3001 root repo http",
                   "emailresponsible": false
+                },
+                "releases": {
+                  "type": "gitea_refs",
+                  "value": "localhost:3001 root repo heads http - release",
+                  "emailresponseible": false
                 }
               }
             }
@@ -240,7 +251,7 @@ in
           };
 
           smallDrv = pkgs.writeText "jobset.nix" ''
-            { pulls, ... }:
+            { pulls, releases, ... }:
 
             let
               genDrv = name: builtins.derivation {
@@ -262,9 +273,19 @@ in
                   }
                 ) prJobNames
               );
+              rels = builtins.fromJSON (builtins.readFile releases);
+              relJobNames = builtins.attrNames rels;
+              relJobset = builtins.listToAttrs (
+                map (
+                  name: {
+                    inherit name;
+                    value = genDrv name;
+                  }
+                ) relJobNames
+              );
             in {
               trivial = genDrv "trivial";
-            } // prJobset
+            } // prJobset // relJobset
           '';
         in
         ''
